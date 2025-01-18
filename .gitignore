@@ -1,0 +1,12 @@
+# .gitignore
+__pycache__/
+*.pyc
+*.pyo
+.vscode/
+.gestao_notas/
+db.sqlite3
+.env
+.pass
+migrations/
+modulo_dois.rar
+modulo_dois.iml

@@ -1,0 +1,217 @@
+<!-- templates/administrador/dashboard.html -->
+{% extends 'layout/base.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block conteudo %}
+<div class="bg-white p-4 rounded shadow-md mx-auto max-w-full overflow-hidden">
+  <h1 class="text-2xl font-bold mb-4">Estatísticas de Pautas por Disciplina</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="chart-container">
+      <canvas id="myChart" class="bg-white rounded shadow-md"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="pieChart" class="bg-white rounded shadow-md"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="lineChart" class="bg-white rounded shadow-md"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="areaChart" class="bg-white rounded shadow-md"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="doughnutChart" class="bg-white rounded shadow-md"></canvas>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/dados_estatisticas_pautas/')
+      .then(response => response.json())
+      .then(data => {
+        const disciplinas = data.disciplinas; // Array de nomes das disciplinas
+        const quantidadePautas = data.quantidade_pautas; // Array de quantidades de pautas
+
+        // Configuração comum para todos os gráficos
+        const commonOptions = {
+          plugins: {
+            title: {
+              display: true,
+              font: { size: 18, weight: 'bold' }
+            },
+            tooltip: {
+              enabled: true,
+              callbacks: {
+                label: function(tooltipItem) {
+                  return tooltipItem.label + ': ' + tooltipItem.formattedValue;
+                }
+              }
+            },
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: false
+        };
+
+        // Gráfico de barras
+        const ctxBar = document.getElementById('myChart').getContext('2d');
+        new Chart(ctxBar, {
+          type: 'bar',
+          data: {
+            labels: disciplinas,
+            datasets: [{
+              label: 'Quantidade de Pautas',
+              data: quantidadePautas,
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            ...commonOptions,
+            plugins: {
+              ...commonOptions.plugins,
+              title: {
+                ...commonOptions.plugins.title,
+                text: 'Quantidade de Pautas por Disciplina'
+              },
+              scales: {
+                x: {
+                  ...commonOptions.plugins.scales?.x,
+                  title: {
+                    display: true,
+                    text: 'Disciplinas'
+                  }
+                },
+                y: {
+                  ...commonOptions.plugins.scales?.y,
+                  title: {
+                    display: true,
+                    text: 'Quantidade de Pautas'
+                  },
+                  beginAtZero: true,
+                  precision: 0
+                }
+              }
+            }
+          }
+        });
+
+        // Gráfico de pizza
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctxPie, {
+          type: 'pie',
+          data: {
+            labels: disciplinas,
+            datasets: [{
+              label: 'Quantidade de Pautas',
+              data: quantidadePautas,
+              backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'],
+              borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            ...commonOptions,
+            plugins: {
+              ...commonOptions.plugins,
+              title: {
+                ...commonOptions.plugins.title,
+                text: 'Proporção de Pautas por Disciplina'
+              }
+            }
+          }
+        });
+
+        // Gráfico de linha
+        const ctxLine = document.getElementById('lineChart').getContext('2d');
+        new Chart(ctxLine, {
+          type: 'line',
+          data: {
+            labels: disciplinas,
+            datasets: [{
+              label: 'Quantidade de Pautas',
+              data: quantidadePautas,
+              fill: false,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              tension: 0.1
+            }]
+          },
+          options: {
+            ...commonOptions,
+            plugins: {
+              ...commonOptions.plugins,
+              title: {
+                ...commonOptions.plugins.title,
+                text: 'Tendência de Pautas por Disciplina'
+              }
+            }
+          }
+        });
+
+        // Gráfico de área
+        const ctxArea = document.getElementById('areaChart').getContext('2d');
+        new Chart(ctxArea, {
+          type: 'line',
+          data: {
+            labels: disciplinas,
+            datasets: [{
+              label: 'Quantidade de Pautas',
+              data: quantidadePautas,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            ...commonOptions,
+            plugins: {
+              ...commonOptions.plugins,
+              title: {
+                ...commonOptions.plugins.title,
+                text: 'Área de Pautas por Disciplina'
+              }
+            }
+          }
+        });
+
+        // Gráfico de rosca
+        const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+        new Chart(ctxDoughnut, {
+          type: 'doughnut',
+          data: {
+            labels: disciplinas,
+            datasets: [{
+              label: 'Quantidade de Pautas',
+              data: quantidadePautas,
+              backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'],
+              borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            ...commonOptions,
+            plugins: {
+              ...commonOptions.plugins,
+              title: {
+                ...commonOptions.plugins.title,
+                text: 'Proporção de Pautas por Disciplina'
+              }
+            }
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Erro ao obter os dados do servidor:', error);
+      });
+  });
+</script>
+{% endblock %}

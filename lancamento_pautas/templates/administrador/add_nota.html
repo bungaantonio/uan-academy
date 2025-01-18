@@ -1,0 +1,97 @@
+{% extends 'layout/base.html' %}
+{% block title %}Administração{% endblock %}
+{% block conteudo %}
+<form id="cadastro-form" method="post">
+    {% csrf_token %}
+    <div class="space-y-12">
+        <div class="border-b border-gray-900/10 pb-12">
+            <h2 class="text-base font-semibold leading-7 text-gray-900">Cadastro de Notas</h2>
+            <div class="border-b border-gray-900/10 pb-12">
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-3">
+                      <label for="pauta" class="block text-sm font-medium leading-6 text-gray-900">Pauta</label>
+                      <div class="mt-2">
+                          {{ form.pauta }}
+                      </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        <label for="estudante" class="block text-sm font-medium leading-6 text-gray-900">Estudante</label>
+                        <div class="mt-2">
+                            {{ form.estudante }}
+                        </div>
+                      </div>
+                </div>
+            </div>
+            <!-- Botão de Submeter -->
+            <button type="submit"
+                class="mt-6 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Submeter</button>
+                <p id="form-message" class="mt-1 text-sm leading-6"></p> <!-- Mensagem dinâmica de erro ou sucesso -->
+        </div>
+    </div>
+</form>
+
+
+<!-- Campo de pesquisa -->
+<input type="text" id="search-input" placeholder="Pesquisar por nome da disciplina"
+       class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+
+<!-- Tabela de Notas -->
+<div class="mt-8">
+    <h2 class="text-base font-semibold leading-7 text-gray-900">Notas Adicionadas</h2>
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead>
+            <tr>
+                <th class="px-4 py-2 border-b">ID</th>
+                <th class="px-4 py-2 border-b">Modelo das Pautas</th>
+                <th class="px-4 py-2 border-b text-left">Estudante</th>
+                <th class="px-4 py-2 border-b">AC1</th>
+                <th class="px-4 py-2 border-b">AC2</th>
+                <th class="px-4 py-2 border-b">PF1</th>
+                <th class="px-4 py-2 border-b">PF2</th>
+
+            </tr>
+        </thead>
+        <tbody id="disciplinas-table-body">
+            {% for nota in notas %}
+            <tr class="text-center">
+                <td class="px-4 py-2 border-b">{{ nota.id }}</td>
+                <td class="px-4 py-2 border-b text-left">{{ nota.pauta }}</td>
+                <td class="px-4 py-2 border-b text-left">{{ nota.estudante }}</td>
+                <td class="px-4 py-2 border-b">{{ nota.AC1 }}</td>
+                <td class="px-4 py-2 border-b">{{ nota.AC2 }}</td>
+                <td class="px-4 py-2 border-b">{{ nota.PF1 }}</td>
+                <td class="px-4 py-2 border-b">{{ nota.PF2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+
+        // Função para filtrar conforme digitação no campo de pesquisa
+        $('#search-input').keyup(function () {
+            var searchTerm = $(this).val().trim().toLowerCase(); // Obtém o termo de pesquisa
+
+            $('#disciplinas-table-body tr').each(function() {
+                var nome = $(this).find('td:eq(1)').text().toLowerCase();
+                if (nome.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+
+        // Função para selecionar todos os checkboxes
+        $('#select-all').change(function () {
+            var isChecked = $(this).prop('checked');
+            $('input[name="estudantes"]').prop('checked', isChecked);
+        });
+    });
+</script>
+{% endblock %}

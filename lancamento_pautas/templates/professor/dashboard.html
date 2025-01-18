@@ -1,0 +1,117 @@
+<!-- templates/professor/dashboard.html -->
+{% extends 'layout/base.html' %} 
+{% block title %}Dashboard do Professor{% endblock %}
+
+{% block conteudo %}
+<div class="bg-white p-4 rounded shadow-md mx-auto max-w-full overflow-hidden">
+  <h1 class="text-2xl font-bold mb-4">Dashboard de Notas por Disciplina</h1>
+  <div class="grid grid-cols-2 gap-4">
+    <!-- Gráfico de Médias das Notas -->
+    <div class="bg-white p-4 rounded shadow-md">
+      <canvas id="notasChart" width="300" height="300"></canvas>
+    </div>
+
+    <!-- Melhor Estudante -->
+    <div class="bg-white p-4 rounded shadow-md">
+      <h2 class="text-lg font-bold mb-2">Melhor Estudante</h2>
+      <p class="text-sm mb-1">Estudante com a maior média:</p>
+      <p class="text-lg font-semibold" id="melhorEstudante">-</p>
+      <p class="text-sm mb-1">Média do melhor estudante:</p>
+      <p class="text-lg font-semibold" id="mediaMelhorEstudante">-</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function() {
+    // Função para carregar os dados das notas do professor via AJAX
+    $.ajax({
+      url: "{% url 'dados_notas_professor' %}",
+      dataType: 'json',
+      success: function(data) {
+        // Configuração do gráfico com os dados recebidos
+        const ctx = document.getElementById('notasChart').getContext('2d');
+        const notasChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: data.disciplinas,
+            datasets: [{
+              label: 'AC1',
+              data: data.notas_ac1,
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }, {
+              label: 'AC2',
+              data: data.notas_ac2,
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+            }, {
+              label: 'PF1',
+              data: data.notas_pf1,
+              backgroundColor: 'rgba(255, 206, 86, 0.2)',
+              borderColor: 'rgba(255, 206, 86, 1)',
+              borderWidth: 1
+            }, {
+              label: 'PF2',
+              data: data.notas_pf2,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            plugins: {
+              title: {
+                display: true,
+                text: 'Médias das Notas por Disciplina',
+                font: {
+                  size: 18,
+                  weight: 'bold'
+                }
+              },
+              tooltip: {
+                enabled: true,
+                callbacks: {
+                  label: function(tooltipItem) {
+                    return tooltipItem.dataset.label + ': ' + tooltipItem.formattedValue;
+                  }
+                }
+              },
+              legend: {
+                display: true,
+                position: 'top'
+              }
+            },
+            scales: {
+              x: {
+                stacked: true,
+                title: {
+                  display: true,
+                  text: 'Disciplinas'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Notas'
+                },
+                suggestedMin: 0,
+                suggestedMax: 20,
+                precision: 0
+              }
+            }
+          }
+        });
+
+        // Exibe o melhor estudante e sua média
+        $('#melhorEstudante').text(data.melhor_estudante || '-');
+        $('#mediaMelhorEstudante').text(data.media_melhor_estudante.toFixed(2) || '-');
+      }
+    });
+  });
+</script>
+{% endblock %}

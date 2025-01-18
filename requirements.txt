@@ -1,0 +1,9 @@
+asgiref==3.8.1
+chardet==5.2.0
+Django==5.1.5
+django-browser-reload==1.17.0
+django-tailwind==3.8.0
+pillow==11.1.0
+reportlab==4.2.5
+sqlparse==0.5.3
+tzdata==2024.2

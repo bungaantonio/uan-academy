@@ -1,0 +1,64 @@
+{% extends 'layout/base.html' %}
+{% block title %} Sistema Integrado | Professor {% endblock %}
+
+{% block h_1 %} Disponibilizar Pautas {% endblock %}
+
+{% block conteudo %}
+    {% include 'professor/escolher_disciplina.html' %}
+    <div id="tabela-estudantes"></div>
+{% endblock %}
+{% block extra_js %}
+    <script>
+
+        $(document).ready(function () {
+            $('#disciplina').change(function () {
+                var disciplina_id = $(this).val();
+                if (disciplina_id) {
+                    $.ajax({
+                        url: '{% url "get_estudantes" %}',
+                        type: 'GET',
+                        data: {disciplina: disciplina_id},
+                        success: function (data) {
+                            console.log('Dados:', data);
+                            $('#tabela-estudantes').html(data);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Erro na requisicao: ', status, error);
+                        }
+                    });
+                } else {
+                    $('#tabela-estudantes').html('');
+                    console.log('Error: ', status, error);
+                }
+            });
+        });
+
+
+        function atualizar_nota(entrada, estudante_id, tipo) {
+            var nota = entrada.value.replace(',', '.');
+            if (nota === '' || isNaN(nota) || nota < 0 || nota > 20) {
+                alert('Por favor, insira uma nota válida entre 0 e 20.');
+                return;
+            }
+            $.ajax({
+                url: '{% url "atualizar_nota" %}',
+                type: 'POST',
+                data: {
+                    'estudante_id': estudante_id,
+                    'nota': nota,
+                    'tipo': tipo,
+                    'csrf_middleware_token': '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    var linha = $(entrada).closest('tr');
+                    linha.find('#media_semestral').text(data.media_semestral);
+                    linha.find('#resultado_final').text(data.resultado_final);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Erro na atualizacao da nota: ', status, error);
+                }
+            });
+        }
+
+    </script>
+{% endblock %}

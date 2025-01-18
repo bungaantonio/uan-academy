@@ -1,0 +1,146 @@
+{% extends 'layout/base.html' %}
+
+{% block h_1 %} Bem-vindo ao Software Integrado - DEI! {% endblock %}
+
+{% block conteudo %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+  <div class="py-4">
+    {% if user.is_authenticated %}
+    <p class="mb-6">{{ user.username|upper }}!</p>
+
+    {% comment %} <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+      <h1 class="text-2xl font-semibold mb-4">Dashboard de Usuários com Sessão Ativa</h1>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <canvas id="professores-chart" class="h-80"></canvas>
+        </div>
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <canvas id="estudantes-chart" class="h-80"></canvas>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h2 class="text-xl font-semibold mb-2">Professores com Sessão Ativa</h2>
+        <ul id="professores-list" class="divide-y divide-gray-200">
+          {% for username in professores %}
+          <li class="py-2">{{ username }}</li>
+          {% endfor %}
+        </ul>
+
+        <h2 class="text-xl font-semibold mt-6 mb-2">Estudantes com Sessão Ativa</h2>
+        <ul id="estudantes-list" class="divide-y divide-gray-200">
+          {% for username in estudantes %}
+          <li class="py-2">{{ username }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div> {% endcomment %}
+    {% else %}
+    <div class="text-gray-500">
+      <p class="mb-6">Faça login para aproveitar o nosso software!</p>
+      <a
+        href="{% url 'login' %}"
+        class="flex items-center text-sm text-green-600 hover:text-green-900"
+      >
+        <svg viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 mr-2">
+          <path
+            fill-rule="evenodd"
+            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span>Fazer login</span>
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Função para carregar e exibir os gráficos
+        function carregarDados() {
+            // Requisição para buscar dados dos professores com sessão ativa
+            $.getJSON("/quantidade_professores_sessao_ativa/", function(data) {
+                var professoresLogados = data.professores_sessao_ativa || 0;
+                var professoresNomes = data.professores_nomes || [];
+    
+                // Requisição para buscar dados dos estudantes com sessão ativa
+                $.getJSON("/quantidade_estudantes_sessao_ativa/", function(data) {
+                    var estudantesLogados = data.estudantes_sessao_ativa || 0;
+                    var estudantesNomes = data.estudantes_nomes || [];
+    
+                    // Dados para os gráficos
+                    var professoresData = {
+                        labels: ["Professores com Sessão Ativa", "Outros"],
+                        datasets: [{
+                            label: 'Professores',
+                            data: [professoresLogados, 100 - professoresLogados],
+                            backgroundColor: ['#3182CE', '#B0C5E8'],
+                        }]
+                    };
+    
+                    var estudantesData = {
+                        labels: ["Estudantes com Sessão Ativa", "Outros"],
+                        datasets: [{
+                            label: 'Estudantes',
+                            data: [estudantesLogados, 100 - estudantesLogados],
+                            backgroundColor: ['#F56565', '#FEB2B2'],
+                        }]
+                    };
+    
+                    // Configuração dos gráficos
+                    var chartOptions = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                        }
+                    };
+    
+                    // Renderização dos gráficos
+                    var ctxProfessores = document.getElementById('professores-chart').getContext('2d');
+                    var ctxEstudantes = document.getElementById('estudantes-chart').getContext('2d');
+    
+                    new Chart(ctxProfessores, {
+                        type: 'pie',
+                        data: professoresData,
+                        options: chartOptions
+                    });
+    
+                    new Chart(ctxEstudantes, {
+                        type: 'pie',
+                        data: estudantesData,
+                        options: chartOptions
+                    });
+    
+                    // Exibir usuários com sessão ativa
+                    exibirUsuariosSessaoAtiva(professoresNomes, estudantesNomes);
+                });
+            });
+        }
+    
+        // Função para exibir os usernames dos usuários com sessão ativa
+        function exibirUsuariosSessaoAtiva(professoresNomes, estudantesNomes) {
+            var professoresList = $('#professores-list');
+            var estudantesList = $('#estudantes-list');
+    
+            professoresNomes.forEach(function(username) {
+                professoresList.append('<li class="py-2">' + username + '</li>');
+            });
+    
+            estudantesNomes.forEach(function(username) {
+                estudantesList.append('<li class="py-2">' + username + '</li>');
+            });
+        }
+    
+        // Chamar a função para carregar os dados ao carregar a página
+        carregarDados();
+    });
+</script>
+{% endblock %}

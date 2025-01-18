@@ -1,0 +1,106 @@
+<!-- templates/desktop_menu.html -->
+{% load static %}
+<!-- Static sidebar for desktop -->
+<div class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
+    <!-- Sidebar component, swap this element with another sidebar if you like -->
+    <div class="flex flex-grow flex-col overflow-y-auto border-r border-gray-200 bg-white pt-5">
+        <div class="flex flex-shrink-0 items-center px-4">
+            <img class="h-8 w-auto" src="{% static 'lancamento_pautas/img/logo.png' %}" alt="DEI">
+        </div>
+        <div class="mt-5 flex flex-grow flex-col">
+            <nav class="flex-1 space-y-1 px-2 pb-4">
+                <!-- Current: "bg-gray-100 text-gray-900", Default: "text-gray-600 hover:bg-gray-50 hover:text-gray-900" -->
+                <a href="{% url 'home' %}"
+                class="{% if request.path == '/' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %} group flex items-center rounded-md px-2 py-2 text-sm font-medium">
+                    <!-- Current: "text-gray-500", Default: "text-gray-400 group-hover:text-gray-500" -->
+                    <svg class="text-gray-500 mr-3 h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                    {% block link1 %}Home{% endblock %}
+                </a>
+                {% if is_administrador %}
+                <a href="{% url 'adicionar_pauta' %}"
+                    class="{% if request.path == '/administrador/add-pauta/' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %} group flex items-center rounded-md px-2 py-2 text-sm font-medium">
+                    <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z" />
+                    </svg>
+                    Pautas
+                </a>
+
+                <a href="{% url 'adicionar_disciplina' %}"
+                    class="{% if request.path == '/administrador/add-disciplina/' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %} group flex items-center rounded-md px-2 py-2 text-sm font-medium">
+                    <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z" />
+                    </svg>
+                    Disciplina
+                </a>
+
+                <a href="{% url 'adicionar_nota' %}"
+                class="{% if request.path == '/administrador/add-nota/' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %} group flex items-center rounded-md px-2 py-2 text-sm font-medium">
+                    <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z" />
+                    </svg>
+                    Nota
+                </a>
+
+                <a href="{% url 'dashboard' %}"
+                class="{% if request.path == '/administrador/dashboard/' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %} group flex items-center rounded-md px-2 py-2 text-sm font-medium">
+                    <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                    </svg>
+                    Dashboard
+                </a>
+
+                {% elif is_professor %}
+                <a href="{% url 'professor' %}"
+                    class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center rounded-md px-2 py-2 text-sm font-medium">
+                    <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z" />
+                    </svg>
+                    Disponibilizar Pautas
+                </a>
+                <a href="{% url 'professor_dashboard' %}"
+                class="{% if request.path == '/professor/dashboard/' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %} group flex items-center rounded-md px-2 py-2 text-sm font-medium">
+                    <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                    </svg>
+                    Dashboard
+                </a>
+                {% elif is_estudante %}
+                <a href="{% url 'estudante' %}"
+                    class="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center rounded-md px-2 py-2 text-sm font-medium">
+                    <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z" />
+                    </svg>
+                    Ver Notas
+                </a>
+                <a href="{% url 'estudante_dashboard' %}"
+                class="{% if request.path == '/estudante/dashboard/' %}bg-gray-100 text-gray-900{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %} group flex items-center rounded-md px-2 py-2 text-sm font-medium">
+                    <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-6 w-6 flex-shrink-0" fill="none"
+                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                    </svg>
+                    Dashboard
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</div>

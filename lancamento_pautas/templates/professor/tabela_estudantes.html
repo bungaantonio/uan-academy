@@ -1,0 +1,115 @@
+<div class="flex flex-1">
+                <form class="flex w-full lg:ml-0" method="GET">{% csrf_token %}
+                    <label for="search-field" class="sr-only">Pesquisar</label>
+                    <div class="relative w-full text-gray-400 focus-within:text-gray-600">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                      d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                                      clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <input id="search-field"
+                               class="block h-full w-full border-transparent py-2 pl-8 pr-3 text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:text-sm"
+                               placeholder="Pesquisar" type="search" name="Pesquisar">
+                    </div>
+                </form>
+</div>
+<div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+            <th scope="col" class="p-4">
+                <div class="flex items-center">
+                    <input id="checkbox-all-search" type="checkbox"
+                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
+                    <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                </div>
+            </th>
+            <th scope="col" class="px-6 py-3">Modelo</th>
+            <th scope="col" class="px-6 py-3">Disciplina</th>
+            <th scope="col" class="px-6 py-3">Notas</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for pauta in pautas %}
+            <tr class="bg-white border-b hover:bg-gray-50">
+                <td class="w-4 p-4">
+                    <div class="flex items-center">
+                        <input id="checkbox-table-search-1" type="checkbox"
+                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"/>
+                        <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                    </div>
+                </td>
+                <td class="px-6 py-4">{{ pauta.modelo }}</td>
+                <td class="px-6 py-4">{{ pauta.disciplina.codigo }}</td>
+                <td class="px-6 py-4">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Estudante</th>
+                            <th scope="col" class="px-6 py-3">AC1</th>
+                            <th scope="col" class="px-6 py-3">AC2</th>
+                            <th scope="col" class="px-6 py-3">PF1</th>
+                            <th scope="col" class="px-6 py-3">PF2</th>
+                            <th scope="col" class="px-6 py-3">MS</th>
+                            <th scope="col" class="px-6 py-3">RES</th>
+                            <th scope="col" class="px-6 py-3">Ação</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {% for nota in pauta.notas.all %}
+                                <tr>
+                                    <td class="px-6 py-4">
+                                        <label>{{ nota.estudante.user.first_name }} {{ nota.estudante.user.last_name }}</label>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <input type="text"
+                                               class="nota1 bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1"
+                                               value="{{ nota.AC1|floatformat:1 }}"
+                                               onchange="atualizar_nota(this, {{ nota.id }}, 'AC1')"
+                                               oninput="validar_nota(this)"
+                                               required >
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <input type="text"
+                                               class="nota2 bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1"
+                                               value="{{ nota.AC2|floatformat:1 }}"
+                                               onchange="atualizar_nota(this, {{ nota.id }}, 'AC2')"
+                                               oninput="validar_nota(this)"
+                                               required >
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <input type="text"
+                                               class="nota3 bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1"
+                                               value="{{ nota.PF1|floatformat:1 }}"
+                                               onchange="atualizar_nota(this, {{ nota.id }}, 'PF1')"
+                                               oninput="validar_nota(this)"
+                                               required >
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <input type="text"
+                                               class="nota4 bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1"
+                                               value="{{ nota.PF2|floatformat:1 }}"
+                                               onchange="atualizar_nota(this, {{ nota.id }}, 'PF2')"
+                                               oninput="validar_nota(this)"
+                                               required >
+                                    </td>
+                                    <td class="px-6 py-4" id="media_semestral">{{ nota.media_semestral|floatformat:1 }}</td>
+                                    <td class="px-6 py-4" id="resultado_final">{{ nota.resultado_final }}</td>
+                                    <td class="flex items-center px-6 py-4">
+                                        <a href="#" class="font-medium text-blue-600 hover:underline">Disponibilizar</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </form>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

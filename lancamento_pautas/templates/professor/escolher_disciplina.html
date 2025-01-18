@@ -1,0 +1,14 @@
+<div>
+    <form class="max-w-sm mr-auto mb-4">
+        <label id="listbox-label" class="block text-sm font-medium leading-6 text-gray-900">Selecione uma opção</label>
+        <div class="relative mt-2">
+            <select id="disciplina" name="disciplina"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5">
+                <option value="">Escolhe uma disciplina</option>
+                {% for disciplina in disciplinas %}
+                <option class="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9" value="{{ disciplina.id }}">{{ disciplina.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+</div>

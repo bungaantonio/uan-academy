@@ -1,0 +1,43 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Sistema Integrado - Pauta{% endblock %}
+
+{% block section %}Pautas{% endblock %}
+
+{% block conteudo %}
+
+    <span class="block  mb-14">
+                <p><a href="{% url 'gerar_pdf' %}" download class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Gerar PDF</a></p>
+          </span>
+
+<div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-gray-500 ">
+        <thead class="text-xs text-gay-700 uppercase bg-gray-50">
+        <tr>
+            <th scope="col" class="px-6 py-3">Disciplina</th>
+            <th scope="col" class="px-6 py-3">Modelo</th>
+            <th scope="col" class="px-6 py-3 ">AC1</th>
+            <th scope="col" class="px-6 py-3">AC2</th>
+            <th scope="col" class="px-6 py-3">PF1</th>
+            <th scope="col" class="px-6 py-3">PF2</th>
+            <th scope="col" class="px-6 py-3">MS</th>
+            <th scope="col" class="px-6 py-3">RES</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for nota in nota_disponivel %}
+        <tr class="bg-white border-b hover:bg-gray-50">
+            <td class="px-6 py-4">{{ nota.pauta.disciplina.codigo }}</td>
+            <td class="px-6 py-4">{{ nota.pauta.modelo }}</td>
+            <td class="px-6 py-4 text-center">{{ nota.AC1 }}</td>
+            <td class="px-6 py-4 text-center">{{ nota.AC2 }}</td>
+            <td class="px-6 py-4 text-center">{{ nota.PF1 }}</td>
+            <td class="px-6 py-4 text-center">{{ nota.PF2 }}</td>
+            <td class="px-6 py-4 text-center">{{ nota.media_semestral }}</td>
+            <td class="px-6 py-4 text-center">{{ nota.resultado_final }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock conteudo %}

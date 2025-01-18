@@ -1,0 +1,127 @@
+<!-- templates/estudante/dashboard.html -->
+{% extends 'layout/base.html' %} 
+{% block title %}Dashboard{% endblock %}
+{% block conteudo %}
+<div class="bg-white p-4 rounded shadow-md mx-auto max-w-full overflow-hidden">
+  <h1 class="text-2xl font-bold mb-4">Dashboard de Notas</h1>
+  <div style="position: relative; height: 60vh; width: 90vw">
+    <canvas id="notasChart"></canvas>
+  </div>
+</div>
+{% endblock %} 
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Função para carregar os dados das notas do estudante via AJAX
+        $.ajax({
+            url: "{% url 'dados_notas_estudante' %}",
+            dataType: 'json',
+            success: function(data) {
+                // Configuração do gráfico com os dados recebidos
+                const ctx = document.getElementById('notasChart').getContext('2d');
+                const notasChart = new Chart(ctx, {
+                    type: 'line', // Alterado para gráfico de linhas
+                    data: {
+                        labels: data.disciplinas,
+                        datasets: [{
+                            label: 'AC1',
+                            data: data.notas_ac1,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }, {
+                            label: 'AC2',
+                            data: data.notas_ac2,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }, {
+                            label: 'PF1',
+                            data: data.notas_pf1,
+                            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }, {
+                            label: 'PF2',
+                            data: data.notas_pf2,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }, {
+                            label: 'Média Semestral',
+                            data: data.notas_media_semestral,
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Notas por Disciplina',
+                                font: {
+                                    size: 18,
+                                    weight: 'bold'
+                                }
+                            },
+                            tooltip: {
+                                enabled: true,
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return tooltipItem.dataset.label + ': ' + tooltipItem.formattedValue;
+                                    }
+                                }
+                            },
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            datalabels: {
+                                display: true,
+                                color: function(context) {
+                                    const index = context.dataIndex;
+                                    const desempenho = data.desempenho_satisfatorio[index];
+                                    
+                                    // Define as cores baseado no desempenho
+                                    return desempenho ? 'green' : 'red';
+                                },
+                                formatter: function(value, context) {
+                                    const index = context.dataIndex;
+                                    const desempenho = data.desempenho_satisfatorio[index];
+                                    
+                                    // Define o texto baseado no desempenho
+                                    return value.toFixed(2) + (desempenho ? ' ✔️' : ' ❌');
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Disciplinas'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Notas'
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 20,
+                                precision: 1
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

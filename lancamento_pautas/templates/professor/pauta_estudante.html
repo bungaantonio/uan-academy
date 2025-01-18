@@ -1,0 +1,57 @@
+<div class="relative overflow-x-auto ">
+    <table class="w-full text-sm text-left  text-gray-500 ">
+        <thead class="text-xs text-gay-700 uppercase bg-gray-50">
+        <tr>
+            <th scope="col" class="px-6 py-3">Disciplina</th>
+            <th scope="col" class="px-6 py-3">AC1</th>
+            <th scope="col" class="px-6 py-3">AC2</th>
+            <th scope="col" class="px-6 py-3">PF1</th>
+            <th scope="col" class="px-6 py-3">PF2</th>
+            <th scope="col" class="px-6 py-3">MS</th>
+            <th scope="col" class="px-6 py-3">RES</th>
+            <th scope="col" class="px-6 py-3">Ação</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for pauta in pautas %}
+            <tr class="bg-white border-b hover:bg-gray-50">
+                <td class="px-6 py-4">{{ estudante.nome_completo }}</td>
+                <td class="px-6 py-4">
+                    <input type="text"
+                           class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ox-2.5 py-1"
+                           placeholder="10" value="{{ estudante.AC1 }}"
+                           onchange="atualizar_nota(this, {{ estudante.id }}, 'AC1')"
+                           required minlength="1" maxlength="2">
+                </td>
+                <td class="px-6 py-4">
+                    <label class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ox-2.5 py-1">
+                        {{ pauta.disciplina.nome }}
+                    </label>
+                </td>
+                <td class="px-6 py-4">
+                    <label class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ox-2.5 py-1">
+                        {{ pauta.AC1 }}
+                    </label>
+                </td>
+                <td class="px-6 py-4">
+                    <label class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ox-2.5 py-1">
+                        {{ pauta.AC2 }}
+                    </label>
+                </td>
+                <td class="px-6 py-4">
+                    <label class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ox-2.5 py-1">
+                        {{ pauta.PF1 }}
+                    </label>
+                </td>
+                <td class="px-6 py-4">
+                    <label class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block ox-2.5 py-1">
+                        {{ pauta.PF2 }}
+                    </label>
+                </td>
+                <td class="px-6 py-4">{{ pauta.media_semestral }}</td>
+                <td class="px-6 py-4">{{ pauta.resultado_final }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

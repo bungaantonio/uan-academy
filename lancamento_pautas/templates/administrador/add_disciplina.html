@@ -1,0 +1,115 @@
+{% extends 'layout/base.html' %}
+{% block title %}Administração{% endblock %}
+{% block conteudo %}
+<form id="cadastro-form" method="post">
+    {% csrf_token %}
+
+    <div class="space-y-12">
+        <div class="border-b border-gray-900/10 pb-12">
+            <h2 class="text-base font-semibold leading-7 text-gray-900">Cadastro de Disciplina</h2>
+            <p class="mt-1 text-sm leading-6 text-gray-600"></p>
+      
+            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div class="sm:col-span-3">
+                <label for="nome" class="block text-sm font-medium leading-6 text-gray-900">Disciplina</label>
+                <div class="mt-2">
+                    {{ form.nome }}
+                </div>
+              </div>
+      
+              <div class="sm:col-span-1">
+                <label for="codigo" class="block text-sm font-medium leading-6 text-gray-900">Código</label>
+                <div class="mt-2">
+                    {{ form.codigo }}
+                </div>
+              </div>
+      
+              <div class="sm:col-span-3">
+                <label for="turno" class="block text-sm font-medium leading-6 text-gray-900">Turno</label>
+                <div class="mt-2">
+                    {{ form.turno }}
+                </div>
+              </div>
+      
+              <div class="sm:col-span-3">
+                <label for="professor" class="block text-sm font-medium leading-6 text-gray-900">Professor</label>
+                <div class="mt-2">
+                    {{ form.professor }}
+                </div>
+              </div>
+
+              <div class="sm:col-span-3  sm:col-start-1">
+                <label for="estudantes" class="block text-sm font-medium leading-6 text-gray-900">Professor</label>
+                <div class="mt-2">
+                    {{ form.estudantes }}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        <!-- Botão de Submeter -->
+        <button type="submit"
+            class="mt-6 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Submeter</button>
+            <p id="form-message" class="mt-1 text-sm leading-6"></p> <!-- Mensagem dinâmica de erro ou sucesso -->
+    </div>
+</form>
+
+<!-- Campo de pesquisa -->
+<input type="text" id="search-input" placeholder="Pesquisar por nome"
+       class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+
+<!-- Tabela de Notas -->
+<div class="mt-8">
+    <h2 class="text-base font-semibold leading-7 text-gray-900">Disciplinas Adicionadas</h2>
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead>
+            <tr>
+                <th class="px-4 py-2 border-b">ID</th>
+                <th class="px-4 py-2 border-b text-left">Nome</th>
+                <th class="px-4 py-2 border-b">Código</th>
+                <th class="px-4 py-2 border-b">Turno</th>
+                <th class="px-4 py-2 border-b">Professor</th>
+            </tr>
+        </thead>
+        <tbody id="disciplinas-table-body">
+            {% for disciplina in disciplinas %}
+            <tr class="text-center">
+                <td class="px-4 py-2 border-b">{{ disciplina.id }}</td>
+                <td class="px-4 py-2 border-b text-left">{{ disciplina.nome }}</td>
+                <td class="px-4 py-2 border-b">{{ disciplina.codigo }}</td>
+                <td class="px-4 py-2 border-b">{{ disciplina.get_turno_display }}</td>
+                <td class="px-4 py-2 border-b">{{ disciplina.professor }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+
+        // Função para filtrar conforme digitação no campo de pesquisa
+        $('#search-input').keyup(function () {
+            var searchTerm = $(this).val().trim().toLowerCase(); // Obtém o termo de pesquisa
+
+            $('#disciplinas-table-body tr').each(function() {
+                var nome = $(this).find('td:eq(1)').text().toLowerCase();
+                if (nome.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        // Função para selecionar todos os checkboxes
+        $('#select-all').change(function () {
+            var isChecked = $(this).prop('checked');
+            $('input[name="estudantes"]').prop('checked', isChecked);
+        });
+    });
+</script>
+{% endblock %}
